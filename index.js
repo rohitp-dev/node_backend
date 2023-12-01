@@ -2,30 +2,28 @@ require('dotenv').config()
 const express = require("express");
 const cors = require("cors");
 const auth = require("./auth/auth.middleware");
+const dbConnect = require("./database/db.config");
+const productRouter = require('./modules/products/product.route');
+const logger = require('./middlewares/logger.middleware');
+
+// connect mongodb
+dbConnect()
 
 const PORT = process.env.PORT || 3000;
 
+// init app
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // log request
-app.use((req, res, next) => {
-    console.debug(`${req.method} ${req.url}`)
-    next()
-})
+app.use(logger)
 
 // jwt verify (custom)
 app.use(auth);
 
-app.get("/status", (req, res) => {
-    res.json({ status: 'ok' });
-});
+// routes
+app.get("/status", (req, res) => { res.json({ status: 'ok' }) });
+app.use('/products', productRouter)
 
-app.get("/auth", (req, res) => {
-    res.json({ message: 'JWT Verified!!!', data: req?.user?.sub });
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
-});
+app.listen(PORT, () => { console.log(`Server is running on port ${PORT}.`) });

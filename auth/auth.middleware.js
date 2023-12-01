@@ -9,6 +9,8 @@ admin.initializeApp({
 
 const auth = async (req, res, next) => {
     const unProtectedRoutes = ["/status"];
+
+    // exclude routes
     if (unProtectedRoutes?.includes(req.url)) {
         return next();
     }
