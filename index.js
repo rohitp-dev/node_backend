@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(logger)
 
 // jwt verify (custom)
-app.use(auth);
+// app.use(auth);
 
 // routes
 app.get("/status", (req, res) => { res.json({ status: 'ok' }) });

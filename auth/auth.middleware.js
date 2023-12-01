@@ -15,11 +15,11 @@ const auth = async (req, res, next) => {
         return next();
     }
     if (!req?.headers?.authorization ||
-        !req?.headers?.authorization?.split(" ")[0] === 'Bearer' ||
+        req?.headers?.authorization?.split(" ")[0] !== 'Bearer' ||
         !req.headers.authorization.split(" ")[1]) {
-        res.status(400).send({ message: 'Token missing!!!' });
+        return res.status(400).send({ message: 'Token missing!!!' });
     }
-    const token = req.headers.authorization.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
     try {
         req.user = await admin.auth().verifyIdToken(token);
     } catch (error) {
